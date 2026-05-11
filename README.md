@@ -59,7 +59,7 @@ npm start
 
 ## Video demo
 
-> _Pendiente de subir_
+[Ver demo en YouTube](https://www.youtube.com/watch?v=2JRtUga6tBY)
 
 ---
 
