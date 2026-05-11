@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
-import { registerUser } from '../utils/auth';
+import { registerUser, saveCurrentUser } from '../utils/auth';
 import CustomButton from '../components/CustomButton';
 
 type Props = {
@@ -34,9 +34,8 @@ export default function RegisterScreen({ navigation }: Props) {
     }
     const ok = await registerUser(username.trim(), password.trim());
     if (ok) {
-      Alert.alert('Éxito', 'Usuario registrado correctamente.', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') },
-      ]);
+      await saveCurrentUser(username.trim());
+      navigation.replace('Home');
     } else {
       Alert.alert('Error', 'El nombre de usuario ya existe.');
     }
