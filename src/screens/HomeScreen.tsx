@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,9 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
-import { getProducts, deleteProduct, toggleProduct, Product } from '../utils/storage';
+import { useProductStore } from '../store/useProductStore';
 import { logout } from '../utils/auth';
 import { requestNotificationPermissions, scheduleShoppingReminder } from '../utils/notifications';
 import ProductItem from '../components/ProductItem';
@@ -20,45 +19,22 @@ type Props = {
 };
 
 export default function HomeScreen({ navigation }: Props) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { products, loadProducts, deleteProduct, toggleProduct } = useProductStore();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadProducts();
-    }, [])
-  );
-
-  const loadProducts = async () => {
-    setProducts(await getProducts());
-  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', loadProducts);
+    return unsubscribe;
+  }, [navigation]);
 
   const handleDelete = (id: string) => {
     Alert.alert('Eliminar producto', '¿Querés eliminar este producto de la lista?', [
       { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Eliminar',
-        style: 'destructive',
-        onPress: async () => {
-          await deleteProduct(id);
-          loadProducts();
-        },
-      },
+      { text: 'Eliminar', style: 'destructive', onPress: () => deleteProduct(id) },
     ]);
   };
 
-  const handleToggle = async (id: string) => {
-    await toggleProduct(id);
-    loadProducts();
-  };
-
   const handleReminder = async () => {
-    const granted = await requestNotificationPermissions();
-    if (!granted) {
-      Alert.alert('Permiso denegado', 'Habilitá las notificaciones en Ajustes del dispositivo.');
-      return;
-    }
-    await scheduleShoppingReminder(10);
-    Alert.alert('Recordatorio programado', 'Recibirás una notificación en 10 segundos.');
+    await scheduleShoppingReminder(1);
   };
 
   const handleLogout = async () => {
@@ -86,7 +62,7 @@ export default function HomeScreen({ navigation }: Props) {
           <ProductItem
             product={item}
             onDelete={() => handleDelete(item.id)}
-            onToggle={() => handleToggle(item.id)}
+            onToggle={() => toggleProduct(item.id)}
           />
         )}
         ListEmptyComponent={

@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -27,7 +26,17 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-notifications"
+      "expo-notifications",
+      "expo-image-picker",
+      "expo-location",
+      [
+        "expo-contacts",
+        { "contactsPermission": "Se necesita acceso a los contactos para asociar un proveedor al producto." }
+      ],
+      [
+        "expo-calendar",
+        { "calendarPermission": "Se necesita acceso al calendario para crear recordatorios de compra." }
+      ]
     ]
   }
 }

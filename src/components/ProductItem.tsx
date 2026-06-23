@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Product } from '../utils/storage';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { Product } from '../types';
 
 type Props = {
   product: Product;
@@ -22,8 +22,18 @@ export default function ProductItem({ product, onDelete, onToggle }: Props) {
           {!!product.quantity && (
             <Text style={styles.quantity}>Cantidad: {product.quantity}</Text>
           )}
+          <View style={styles.badges}>
+            {product.location && <Text style={styles.badge}>📍</Text>}
+            {product.contact && <Text style={styles.badge}>👤</Text>}
+            {product.calendarEventId && <Text style={styles.badge}>📅</Text>}
+          </View>
         </View>
       </TouchableOpacity>
+
+      {product.imageUri && (
+        <Image source={{ uri: product.imageUri }} style={styles.thumbnail} resizeMode="cover" />
+      )}
+
       <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
         <Text style={styles.deleteText}>✕</Text>
       </TouchableOpacity>
@@ -38,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 16,
     marginVertical: 4,
-    padding: 14,
+    padding: 12,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -63,6 +73,9 @@ const styles = StyleSheet.create({
   name: { fontSize: 16, color: '#333', fontWeight: '500' },
   completedText: { textDecorationLine: 'line-through', color: '#aaa' },
   quantity: { fontSize: 12, color: '#888', marginTop: 2 },
+  badges: { flexDirection: 'row', gap: 4, marginTop: 4 },
+  badge: { fontSize: 12 },
+  thumbnail: { width: 52, height: 52, borderRadius: 8, marginHorizontal: 8 },
   deleteButton: { padding: 8 },
   deleteText: { fontSize: 18, color: '#e53935' },
 });
