@@ -144,7 +144,7 @@ src/
 ## Videos demo
 
 - **Parcial 1:** [Ver en YouTube](https://www.youtube.com/watch?v=2JRtUga6tBY)
-- **Parcial 2:** *(pendiente de grabación)*
+- **Parcial 2:** [Ver en YouTube](https://youtu.be/75N5NWzP-kc)
 
 ---
 
